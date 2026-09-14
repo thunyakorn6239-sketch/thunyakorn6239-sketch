@@ -1,804 +1,482 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>THUNYAKORN PIAMANBOONTEE — 3D Portfolio</title>
-  <meta name="description" content="THUNYAKORN PIAMANBOONTEE — 3D Artist & Digital Media Designer Portfolio" />
-
-  <style>
-    :root {
-      --bg: #030504;
-      --panel: rgba(7, 12, 9, 0.84);
-      --line: rgba(160, 255, 185, 0.2);
-      --text: #e6ffe9;
-      --muted: #82a88b;
-      --accent: #8dff9f;
-      --accent-2: #d8ffe0;
-    }
-
-    * { box-sizing: border-box; }
-
-    html {
-      scroll-behavior: smooth;
-      background: var(--bg);
-    }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background:
-        radial-gradient(circle at 75% 20%, rgba(45, 120, 62, 0.14), transparent 32%),
-        radial-gradient(circle at 15% 80%, rgba(45, 120, 62, 0.09), transparent 28%),
-        var(--bg);
-      color: var(--text);
-      font-family: "Courier New", Courier, monospace;
-      overflow-x: hidden;
-    }
-
-    #scene {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-    }
-
-    #scene canvas {
-      display: block;
-      width: 100%;
-      height: 100%;
-    }
-
-    .scanlines {
-      position: fixed;
-      inset: 0;
-      z-index: 1;
-      pointer-events: none;
-      opacity: 0.10;
-      background:
-        repeating-linear-gradient(
-          to bottom,
-          transparent 0px,
-          transparent 2px,
-          rgba(255,255,255,0.06) 3px,
-          transparent 4px
-        );
-      mix-blend-mode: screen;
-    }
-
-    .vignette {
-      position: fixed;
-      inset: 0;
-      z-index: 1;
-      pointer-events: none;
-      background: radial-gradient(circle, transparent 42%, rgba(0,0,0,0.55) 100%);
-    }
-
-    .ui {
-      position: relative;
-      z-index: 2;
-    }
-
-    header {
-      min-height: 100vh;
-      display: grid;
-      grid-template-rows: auto 1fr auto;
-      padding: 24px 5vw 28px;
-    }
-
-    nav {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 30px;
-    }
-
-    .brand {
-      letter-spacing: 0.18em;
-      font-size: 12px;
-      color: var(--accent);
-      text-transform: uppercase;
-    }
-
-    nav a {
-      color: var(--muted);
-      text-decoration: none;
-      font-size: 11px;
-      margin-left: 22px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      transition: color 180ms ease;
-    }
-
-    nav a:hover { color: var(--accent-2); }
-
-    .hero {
-      max-width: 960px;
-      align-self: center;
-      pointer-events: none;
-    }
-
-    .eyebrow {
-      margin: 0 0 16px;
-      color: var(--accent);
-      font-size: clamp(10px, 1.2vw, 13px);
-      letter-spacing: 0.30em;
-      text-transform: uppercase;
-    }
-
-    h1 {
-      margin: 0;
-      max-width: 950px;
-      font-size: clamp(48px, 9vw, 132px);
-      line-height: 0.88;
-      letter-spacing: -0.06em;
-      text-transform: uppercase;
-      text-shadow: 0 0 30px rgba(141,255,159,0.12);
-    }
-
-    .hero-line {
-      width: min(520px, 55vw);
-      height: 1px;
-      background: linear-gradient(90deg, var(--accent), transparent);
-      margin: 30px 0 18px;
-      opacity: 0.7;
-    }
-
-    .hero-copy {
-      width: min(560px, 100%);
-      margin: 0;
-      color: var(--muted);
-      font-size: clamp(12px, 1.25vw, 15px);
-      line-height: 1.8;
-    }
-
-    .hero-copy strong { color: var(--accent-2); }
-
-    .controls-hint {
-      align-self: end;
-      display: flex;
-      justify-content: space-between;
-      gap: 20px;
-      color: rgba(230,255,233,0.5);
-      font-size: 10px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-    }
-
-    .scroll {
-      animation: blink 1.6s ease-in-out infinite;
-    }
-
-    @keyframes blink {
-      50% { opacity: 0.25; }
-    }
-
-    main {
-      position: relative;
-      z-index: 2;
-      padding: 8vh 5vw 10vh;
-      background: linear-gradient(to bottom, transparent, rgba(3,5,4,0.96) 10%);
-    }
-
-    section {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 9vh 0;
-      border-top: 1px solid var(--line);
-    }
-
-    .section-head {
-      display: grid;
-      grid-template-columns: 0.25fr 1fr;
-      gap: 30px;
-      align-items: start;
-    }
-
-    .index {
-      color: var(--accent);
-      font-size: 11px;
-      letter-spacing: 0.18em;
-    }
-
-    h2 {
-      margin: 0;
-      font-size: clamp(30px, 5vw, 58px);
-      line-height: 0.98;
-      letter-spacing: -0.05em;
-      text-transform: uppercase;
-    }
-
-    .about-grid {
-      margin-top: 48px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 50px;
-    }
-
-    .about-grid p {
-      color: var(--muted);
-      line-height: 1.9;
-      font-size: 13px;
-      margin: 0;
-    }
-
-    .manifest {
-      display: grid;
-      gap: 14px;
-    }
-
-    .manifest div {
-      padding: 16px 0;
-      border-bottom: 1px solid rgba(160,255,185,0.12);
-      display: flex;
-      justify-content: space-between;
-      gap: 20px;
-    }
-
-    .manifest span:first-child { color: var(--muted); }
-    .manifest span:last-child { color: var(--accent-2); text-align: right; }
-
-    .projects {
-      margin-top: 48px;
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 18px;
-    }
-
-    .card {
-      padding: 24px;
-      min-height: 220px;
-      border: 1px solid rgba(160,255,185,0.18);
-      background: rgba(7,12,9,0.5);
-      backdrop-filter: blur(8px);
-      transition: border-color 180ms ease, transform 180ms ease, background 180ms ease;
-    }
-
-    .card:hover {
-      border-color: rgba(141,255,159,0.55);
-      background: rgba(15,24,17,0.68);
-      transform: translateY(-3px);
-    }
-
-    .card .tag {
-      color: var(--accent);
-      font-size: 10px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-    }
-
-    .card h3 {
-      margin: 22px 0 12px;
-      font-size: 25px;
-      letter-spacing: -0.03em;
-      text-transform: uppercase;
-    }
-
-    .card p {
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.7;
-      max-width: 560px;
-    }
-
-    .skills {
-      margin-top: 48px;
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      border: 1px solid rgba(160,255,185,0.16);
-    }
-
-    .skill {
-      min-height: 150px;
-      padding: 22px;
-      border-right: 1px solid rgba(160,255,185,0.16);
-      border-bottom: 1px solid rgba(160,255,185,0.16);
-    }
-
-    .skill:nth-child(4n) { border-right: none; }
-    .skill:nth-last-child(-n+4) { border-bottom: none; }
-
-    .skill-num {
-      color: rgba(141,255,159,0.55);
-      font-size: 10px;
-    }
-
-    .skill h3 {
-      margin: 30px 0 8px;
-      font-size: 15px;
-      text-transform: uppercase;
-    }
-
-    .skill p {
-      color: var(--muted);
-      font-size: 10px;
-      line-height: 1.6;
-    }
-
-    .contact-box {
-      margin-top: 46px;
-      padding: 30px;
-      border: 1px solid rgba(141,255,159,0.35);
-      background: rgba(7,12,9,0.62);
-    }
-
-    .contact-box p {
-      margin: 0 0 18px;
-      color: var(--muted);
-      line-height: 1.8;
-      font-size: 12px;
-    }
-
-    .contact-mail {
-      color: var(--accent-2);
-      font-size: clamp(16px, 2.5vw, 28px);
-      text-decoration: none;
-      word-break: break-word;
-    }
-
-    footer {
-      border-top: 1px solid var(--line);
-      padding-top: 28px;
-      display: flex;
-      justify-content: space-between;
-      gap: 20px;
-      color: rgba(230,255,233,0.44);
-      font-size: 10px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-
-    .status {
-      position: fixed;
-      right: 18px;
-      bottom: 16px;
-      z-index: 3;
-      padding: 8px 10px;
-      background: rgba(4,8,5,0.72);
-      border: 1px solid rgba(141,255,159,0.18);
-      color: rgba(230,255,233,0.5);
-      font-size: 9px;
-      letter-spacing: 0.12em;
-      backdrop-filter: blur(8px);
-    }
-
-    @media (max-width: 820px) {
-      header { padding: 18px 22px 24px; }
-      nav a { margin-left: 10px; font-size: 9px; }
-      .section-head { grid-template-columns: 1fr; gap: 14px; }
-      .about-grid, .projects { grid-template-columns: 1fr; }
-      .skills { grid-template-columns: 1fr 1fr; }
-      .skill:nth-child(4n) { border-right: 1px solid rgba(160,255,185,0.16); }
-      .skill:nth-child(2n) { border-right: none; }
-      .skill:nth-last-child(-n+4) { border-bottom: 1px solid rgba(160,255,185,0.16); }
-      .skill:nth-last-child(-n+2) { border-bottom: none; }
-      main { padding-left: 22px; padding-right: 22px; }
-      section { padding: 7vh 0; }
-    }
-
-    @media (max-width: 560px) {
-      nav { align-items: flex-start; }
-      nav div:last-child { display: none; }
-      h1 { font-size: clamp(45px, 16vw, 84px); }
-      .hero-copy { font-size: 11px; }
-      .controls-hint { font-size: 8px; }
-      .skills { grid-template-columns: 1fr; }
-      .skill, .skill:nth-child(2n), .skill:nth-child(4n),
-      .skill:nth-last-child(-n+2), .skill:nth-last-child(-n+4) {
-        border-right: none;
-        border-bottom: 1px solid rgba(160,255,185,0.16);
-      }
-      .skill:last-child { border-bottom: none; }
-      footer { flex-direction: column; }
-    }
-  </style>
-
-  <script type="importmap">
-  {
-    "imports": {
-      "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
-      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thunyakorn Piamanboontee — ASCII 3D Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #060605;
+    --tile: #0C0B08;
+    --ink: #F4F0E4;
+    --ink-dim: #948C7B;
+    --gold: #E8B84B;
+    --gold-dim: #7A6329;
+    --line: #201C13;
   }
-  </script>
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter', sans-serif;
+    overflow-x:hidden;
+  }
+  h1,h2,h3{ font-family:'Space Grotesk', sans-serif; font-weight:600; letter-spacing:-0.01em; line-height:1.05; }
+  .mono{ font-family:'JetBrains Mono', monospace; }
+  a{ color:inherit; text-decoration:none; }
+  ::selection{ background:var(--gold); color:#000; }
+
+  /* ---------- nav ---------- */
+  nav{
+    position:fixed; top:0; left:0; right:0; z-index:70;
+    display:flex; justify-content:space-between; align-items:center;
+    padding:22px clamp(20px,4.5vw,56px);
+    mix-blend-mode:difference;
+  }
+  .nav-mark{ font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:15px; }
+  .nav-mark span{ color:var(--gold); }
+  .nav-links{ display:flex; gap:30px; }
+  .nav-links a{ font-size:13px; color:var(--ink); opacity:.75; transition:opacity .25s ease; }
+  .nav-links a:hover{ opacity:1; color:var(--gold); }
+
+  /* ---------- ascii hero ---------- */
+  .hero{
+    position:relative;
+    height:100svh;
+    overflow:hidden;
+    background:#000;
+    border-bottom:1px solid var(--line);
+  }
+  #ascii-holder{
+    position:absolute; inset:0;
+    display:flex; align-items:center; justify-content:center;
+  }
+  #ascii-holder table{
+    image-rendering:pixelated;
+  }
+  #ascii-holder td{
+    font-family:'JetBrains Mono', monospace !important;
+  }
+  .ascii-loading{
+    position:absolute; inset:0; z-index:5;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'JetBrains Mono', monospace; font-size:12px; color:var(--gold-dim);
+    letter-spacing:.08em; background:#000;
+    transition:opacity .5s ease;
+  }
+
+  .hero-top{
+    position:absolute; top:0; left:0; right:0; z-index:6; pointer-events:none;
+    display:flex; justify-content:space-between; align-items:flex-start;
+    padding:90px clamp(20px,4.5vw,56px) 0;
+  }
+  .hero-id{ font-size:13px; color:var(--ink-dim); }
+  .hero-id b{ color:var(--gold); font-weight:600; display:block; font-size:15px; margin-top:4px; }
+  .hero-tag{
+    font-family:'JetBrains Mono', monospace; font-size:11px; color:var(--gold-dim);
+    border:1px solid rgba(232,184,75,0.25); padding:6px 12px; border-radius:100px;
+  }
+
+  .hero-bottom{
+    position:absolute; bottom:0; left:0; right:0; z-index:6; pointer-events:none;
+    display:flex; justify-content:space-between; align-items:flex-end;
+    padding:0 clamp(20px,4.5vw,56px) 40px;
+  }
+  .hero-title{
+    font-size:clamp(30px, 4.4vw, 54px);
+    color:var(--ink);
+    max-width:9ch;
+  }
+  .hero-title .out{ -webkit-text-stroke:1px var(--gold); color:transparent; }
+  .hero-hint{
+    font-family:'JetBrains Mono', monospace; font-size:11px; color:var(--ink-dim);
+    text-align:right; line-height:1.6;
+  }
+  .hero-hint b{ color:var(--gold); }
+
+  /* ---------- control panel ---------- */
+  .panel{
+    position:absolute; right:clamp(16px,3vw,40px); top:50%; transform:translateY(-50%);
+    z-index:10; width:220px;
+    background:rgba(8,7,5,0.7); backdrop-filter:blur(10px);
+    border:1px solid rgba(232,184,75,0.18); border-radius:12px;
+    padding:18px 16px;
+    display:flex; flex-direction:column; gap:14px;
+    pointer-events:auto;
+  }
+  .panel h4{
+    font-family:'JetBrains Mono', monospace; font-size:10px; letter-spacing:.1em;
+    color:var(--gold); text-transform:uppercase; margin-bottom:2px;
+  }
+  .panel-group{ display:flex; flex-direction:column; gap:8px; }
+  .panel-row{ display:flex; justify-content:space-between; align-items:center; gap:8px; }
+  .panel-row label{ font-size:11px; color:var(--ink-dim); font-family:'JetBrains Mono', monospace; }
+  .seg{ display:flex; gap:4px; flex-wrap:wrap; }
+  .seg button{
+    font-family:'JetBrains Mono', monospace; font-size:10.5px;
+    background:transparent; border:1px solid rgba(244,240,228,0.15); color:var(--ink-dim);
+    padding:5px 8px; border-radius:6px; cursor:pointer; transition:all .2s ease;
+  }
+  .seg button.active{ background:var(--gold); border-color:var(--gold); color:#0a0805; }
+  .seg button:hover{ border-color:var(--gold); color:var(--ink); }
+  input[type="range"]{
+    -webkit-appearance:none; width:100%; height:2px; background:var(--line); border-radius:2px;
+  }
+  input[type="range"]::-webkit-slider-thumb{
+    -webkit-appearance:none; width:11px; height:11px; border-radius:50%;
+    background:var(--gold); cursor:pointer; margin-top:-4.5px;
+  }
+  .toggle{
+    width:34px; height:19px; border-radius:100px; border:1px solid rgba(244,240,228,0.2);
+    position:relative; cursor:pointer; background:transparent; flex-shrink:0;
+  }
+  .toggle::after{
+    content:''; position:absolute; top:2px; left:2px; width:13px; height:13px; border-radius:50%;
+    background:var(--ink-dim); transition:all .2s ease;
+  }
+  .toggle.on{ border-color:var(--gold); }
+  .toggle.on::after{ background:var(--gold); left:17px; }
+  .panel-div{ height:1px; background:var(--line); }
+
+  /* ---------- sections ---------- */
+  section{ padding:clamp(80px,12vh,130px) clamp(20px,4.5vw,56px); border-top:1px solid var(--line); }
+  .section-label{ font-family:'JetBrains Mono', monospace; font-size:12px; color:var(--gold); margin-bottom:22px; }
+  .section-head{ display:flex; justify-content:space-between; align-items:flex-end; gap:32px; flex-wrap:wrap; margin-bottom:48px; }
+  .section-head h2{ font-size:clamp(26px,3.6vw,44px); max-width:16ch; }
+  .section-head p{ color:var(--ink-dim); max-width:38ch; font-size:14.5px; line-height:1.6; }
+
+  /* ---------- about ---------- */
+  .about{ display:grid; grid-template-columns:1.2fr .8fr; gap:48px; }
+  .about-text p{ font-size:clamp(17px,1.9vw,21px); line-height:1.55; color:var(--ink); max-width:42ch; }
+  .about-text p + p{ margin-top:18px; color:var(--ink-dim); font-size:14.5px; max-width:46ch; font-weight:400; }
+  .about-note{
+    align-self:start;
+    font-family:'JetBrains Mono', monospace; font-size:12px; color:var(--ink-dim);
+    border-left:1px solid var(--gold-dim); padding-left:18px; line-height:1.8;
+  }
+  .about-note b{ color:var(--gold); display:block; margin-bottom:6px; font-size:13px; }
+
+  /* ---------- work list ---------- */
+  .work-list{ display:flex; flex-direction:column; }
+  .work-row{
+    display:grid; grid-template-columns:60px 1fr auto; align-items:center;
+    gap:28px; padding:26px 0; border-top:1px solid var(--line);
+    transition:background .3s ease;
+  }
+  .work-row:last-child{ border-bottom:1px solid var(--line); }
+  .work-row:hover{ background:rgba(232,184,75,0.04); }
+  .work-num{ font-family:'JetBrains Mono', monospace; font-size:12px; color:var(--gold-dim); }
+  .work-info h3{ font-size:clamp(19px,2.2vw,26px); font-weight:600; }
+  .work-info p{ margin-top:6px; color:var(--ink-dim); font-size:13.5px; max-width:56ch; font-weight:400; }
+  .work-meta{ text-align:right; font-family:'JetBrains Mono', monospace; color:var(--ink-dim); font-size:11.5px; display:flex; flex-direction:column; gap:5px; }
+  .work-meta span:first-child{ color:var(--gold); }
+
+  /* ---------- skills ---------- */
+  .process{ display:grid; grid-template-columns:.8fr 1.4fr; gap:48px; }
+  .process-list{ display:flex; flex-wrap:wrap; gap:10px 24px; }
+  .process-list li{ list-style:none; font-family:'Space Grotesk', sans-serif; font-weight:500; font-size:clamp(17px,2vw,24px); color:var(--ink-dim); transition:color .25s ease; }
+  .process-list li:hover{ color:var(--gold); }
+
+  /* ---------- contact ---------- */
+  .contact{ display:flex; flex-direction:column; align-items:flex-start; gap:22px; }
+  .contact h2{ font-size:clamp(28px,5vw,64px); max-width:16ch; }
+  .contact-link{ font-size:clamp(15px,1.6vw,18px); color:var(--ink); padding-bottom:6px; border-bottom:1px solid var(--gold-dim); transition:border-color .25s ease,color .25s ease; }
+  .contact-link:hover{ border-color:var(--gold); color:var(--gold); }
+  .contact-socials{ display:flex; gap:20px; margin-top:4px; font-size:13px; color:var(--ink-dim); }
+  .contact-socials a:hover{ color:var(--gold); }
+  footer{ padding:22px clamp(20px,4.5vw,56px); display:flex; justify-content:space-between; font-family:'JetBrains Mono', monospace; font-size:11px; color:var(--ink-dim); border-top:1px solid var(--line); }
+
+  @media (max-width:900px){
+    .about, .process{ grid-template-columns:1fr; gap:28px; }
+    .panel{ position:static; transform:none; width:auto; margin:16px clamp(20px,4.5vw,56px) 0; }
+    .hero-bottom{ flex-direction:column; align-items:flex-start; gap:16px; }
+    .hero-hint{ text-align:left; }
+    .work-row{ grid-template-columns:36px 1fr; }
+    .work-meta{ display:none; }
+  }
+</style>
 </head>
-
 <body>
-  <div id="scene" aria-hidden="true"></div>
-  <div class="scanlines"></div>
-  <div class="vignette"></div>
 
-  <div class="ui">
-    <header>
-      <nav>
-        <div class="brand">TPB / 3D PORTFOLIO</div>
-        <div>
-          <a href="#about">About</a>
-          <a href="#work">Work</a>
-          <a href="#skills">Skills</a>
-          <a href="#contact">Contact</a>
-        </div>
-      </nav>
+<nav>
+  <span class="nav-mark">Thunyakorn <span>Piamanboontee</span></span>
+  <div class="nav-links">
+    <a href="#work">ผลงาน</a>
+    <a href="#about">เกี่ยวกับ</a>
+    <a href="#contact">ติดต่อ</a>
+  </div>
+</nav>
 
-      <div class="hero">
-        <p class="eyebrow">Digital Media Designer / 3D Artist</p>
-        <h1>THUNYAKORN<br />PIAMANBOONTEE</h1>
-        <div class="hero-line"></div>
-        <p class="hero-copy">
-          Building <strong>3D worlds, characters, animation and interactive experiences</strong>
-          with a focus on shape, atmosphere and visual storytelling.
-        </p>
-      </div>
+<section class="hero">
+  <div id="ascii-holder"></div>
+  <div class="ascii-loading" id="ascii-loading">initializing ascii renderer…</div>
 
-      <div class="controls-hint">
-        <span>Mouse / Touch — Rotate & Explore</span>
-        <span class="scroll">↓ Scroll to enter portfolio</span>
-      </div>
-    </header>
-
-    <main>
-      <section id="about">
-        <div class="section-head">
-          <div class="index">01 / ABOUT</div>
-          <h2>From pixels<br />to worlds.</h2>
-        </div>
-
-        <div class="about-grid">
-          <p>
-            I am a Digital Media Design student exploring 3D modeling, animation,
-            environment design and real-time interactive media. My approach combines
-            clean forms, expressive visuals and technical experimentation.
-          </p>
-
-          <div class="manifest">
-            <div><span>Focus</span><span>3D / Animation / Interactive</span></div>
-            <div><span>Style</span><span>Stylized / Cinematic / Experimental</span></div>
-            <div><span>Tools</span><span>Blender / Unity / Maya</span></div>
-            <div><span>Based</span><span>Thailand</span></div>
-          </div>
-        </div>
-      </section>
-
-      <section id="work">
-        <div class="section-head">
-          <div class="index">02 / SELECTED WORK</div>
-          <h2>Projects<br />in motion.</h2>
-        </div>
-
-        <div class="projects">
-          <article class="card">
-            <div class="tag">Thesis / 3D Animation</div>
-            <h3>Flowers of Memory</h3>
-            <p>
-              A psychological fantasy animation that uses a forgotten garden as
-              a visual metaphor for pain, memory and the process of healing.
-            </p>
-          </article>
-
-          <article class="card">
-            <div class="tag">Real-Time / Unity</div>
-            <h3>Interactive Worlds</h3>
-            <p>
-              Real-time environments, character interaction, particles and
-              gameplay prototypes designed with atmosphere and exploration in mind.
-            </p>
-          </article>
-
-          <article class="card">
-            <div class="tag">Modeling / Blender</div>
-            <h3>Character Lab</h3>
-            <p>
-              Stylized character studies focused on readable silhouettes,
-              simple shapes, expressive poses and production-ready topology.
-            </p>
-          </article>
-
-          <article class="card">
-            <div class="tag">Environment / 3D</div>
-            <h3>World Building</h3>
-            <p>
-              Modular assets, terrain, props and lighting studies for creating
-              immersive spaces with a strong visual identity.
-            </p>
-          </article>
-        </div>
-      </section>
-
-      <section id="skills">
-        <div class="section-head">
-          <div class="index">03 / SKILLS</div>
-          <h2>What<br />I build.</h2>
-        </div>
-
-        <div class="skills">
-          <div class="skill">
-            <div class="skill-num">01</div>
-            <h3>3D Modeling</h3>
-            <p>Characters, props, environments, UVs and optimization.</p>
-          </div>
-          <div class="skill">
-            <div class="skill-num">02</div>
-            <h3>Animation</h3>
-            <p>Keyframe animation, timing, camera work and visual storytelling.</p>
-          </div>
-          <div class="skill">
-            <div class="skill-num">03</div>
-            <h3>Blender</h3>
-            <p>Modeling, rigging, materials, lighting and procedural workflows.</p>
-          </div>
-          <div class="skill">
-            <div class="skill-num">04</div>
-            <h3>Unity</h3>
-            <p>Real-time scenes, gameplay prototypes, VFX and interactive media.</p>
-          </div>
-          <div class="skill">
-            <div class="skill-num">05</div>
-            <h3>Maya</h3>
-            <p>Animation fundamentals, cameras, rigs and production workflows.</p>
-          </div>
-          <div class="skill">
-            <div class="skill-num">06</div>
-            <h3>Design</h3>
-            <p>Composition, color, mood, atmosphere and concept direction.</p>
-          </div>
-          <div class="skill">
-            <div class="skill-num">07</div>
-            <h3>Interactive</h3>
-            <p>Web 3D, AR experiments and experimental visual interfaces.</p>
-          </div>
-          <div class="skill">
-            <div class="skill-num">08</div>
-            <h3>Storytelling</h3>
-            <p>Symbolism, emotion and visual narratives through 3D media.</p>
-          </div>
-        </div>
-      </section>
-
-      <section id="contact">
-        <div class="section-head">
-          <div class="index">04 / CONTACT</div>
-          <h2>Let's make<br />something.</h2>
-        </div>
-
-        <div class="contact-box">
-          <p>
-            Replace the email below with your real portfolio contact address.
-            You can also add Behance, ArtStation, LinkedIn or other portfolio links here.
-          </p>
-          <a class="contact-mail" href="mailto:your-email@example.com">
-            your-email@example.com ↗
-          </a>
-        </div>
-      </section>
-
-      <footer>
-        <span>© 2026 THUNYAKORN PIAMANBOONTEE</span>
-        <span>3D / DIGITAL MEDIA / CREATIVE TECHNOLOGY</span>
-      </footer>
-    </main>
+  <div class="hero-top">
+    <div class="hero-id">Thunyakorn Piamanboontee<b>3D Product Artist</b></div>
+    <div class="hero-tag mono">ASCII RENDER · LIVE</div>
   </div>
 
-  <div class="status">ASCII ENGINE // THREE.JS // ONLINE</div>
+  <h1 class="hero-title" style="position:absolute; left:clamp(20px,4.5vw,56px); top:50%; transform:translateY(-50%); z-index:6; pointer-events:none;">
+    PORT<span class="out">FOLIO</span>
+  </h1>
 
-  <script type="module">
-    import * as THREE from "three";
-    import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-    import { AsciiEffect } from "three/addons/effects/AsciiEffect.js";
+  <div class="hero-bottom">
+    <div class="hero-hint">ลากเมาส์เพื่อหมุนโมเดล · เลือกฟอนต์และรูปทรงได้ที่แผงด้านขวา<br>ทุกพิกเซลคือ<b>ตัวอักษร</b> ไม่ใช่รูปภาพ</div>
+  </div>
 
-    const mount = document.getElementById("scene");
+  <div class="panel">
+    <div class="panel-group">
+      <h4>Model</h4>
+      <div class="seg" id="model-seg">
+        <button data-v="gem" class="active">Gem</button>
+        <button data-v="knot">Knot</button>
+        <button data-v="capsule">Capsule</button>
+      </div>
+    </div>
+    <div class="panel-div"></div>
+    <div class="panel-group">
+      <h4>Character Set</h4>
+      <div class="seg" id="chars-seg">
+        <button data-v=" .:-+*=%@#" class="active">Classic</button>
+        <button data-v=" .,:;+*?%#@">Dense</button>
+        <button data-v=" 01">Binary</button>
+      </div>
+    </div>
+    <div class="panel-div"></div>
+    <div class="panel-group">
+      <div class="panel-row"><label>Resolution</label></div>
+      <input type="range" id="res-slider" min="6" max="22" value="12">
+    </div>
+    <div class="panel-div"></div>
+    <div class="panel-group">
+      <div class="panel-row"><label>Invert</label><button class="toggle" id="invert-toggle"></button></div>
+      <div class="panel-row"><label>Color mode</label><button class="toggle" id="color-toggle"></button></div>
+      <div class="panel-row"><label>Auto-rotate</label><button class="toggle on" id="rotate-toggle"></button></div>
+    </div>
+  </div>
+</section>
 
-    // -----------------------------
-    // Scene
-    // -----------------------------
-    const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x030504);
+<section class="about" id="about">
+  <div class="about-text">
+    <p>ผมออกแบบและขึ้นโมเดล 3 มิติให้กับผลิตภัณฑ์ ตั้งแต่งานเรนเดอร์ทั่วไปไปจนถึงการทดลองนำเสนอรูปทรง 3 มิติผ่านตัวอักษรแบบเรียลไทม์บนเว็บ</p>
+    <p>ทำงานด้วย Blender เป็นหลักในขั้นตอนขึ้นรูปและจัดแสง ก่อนนำไปพัฒนาต่อด้วย Three.js ให้กลายเป็นชิ้นงานที่โต้ตอบกับผู้ชมได้จริง เช่นเอฟเฟกต์ ASCII ด้านบนที่แปลงพิกเซลของโมเดลให้เป็นตัวอักษรสดในเบราว์เซอร์</p>
+  </div>
+  <div class="about-note mono">
+    <b>Technique note</b>
+    โมเดลถูกเรนเดอร์ปกติในฉาก 3 มิติ จากนั้นแปลงค่าความสว่างของแต่ละพิกเซลเป็นตัวอักษรตามชุดที่เลือกไว้ — ยิ่งพื้นที่สว่างมาก อักขระจะยิ่งหนาแน่น ให้ความรู้สึกแบบเทอร์มินัลย้อนยุคแต่ยังคงมิติของโมเดลจริงไว้ครบ
+  </div>
+</section>
 
-    const camera = new THREE.PerspectiveCamera(
-      42,
-      window.innerWidth / window.innerHeight,
-      0.1,
-      100
-    );
-    camera.position.set(0, 0.15, 5.4);
+<section id="work">
+  <div class="section-head">
+    <h2>ผลิตภัณฑ์ 3 มิติที่ผ่านมา</h2>
+    <p>ผลงานสร้างวัตถุและผลิตภัณฑ์ 3 มิติ คัดเลือกจากงานสตูดิโอและงานทดลองส่วนตัว</p>
+  </div>
+  <div class="work-list">
+    <div class="work-row">
+      <span class="work-num mono">01</span>
+      <div class="work-info"><h3>ASCII Product Viewer</h3><p>ตัวเรนเดอร์ผลิตภัณฑ์แบบ ASCII แบบเรียลไทม์ ใช้สำรวจฟอร์มโดยไม่ต้องพึ่งพื้นผิวจริง</p></div>
+      <div class="work-meta"><span>Experiment</span><span>2026</span></div>
+    </div>
+    <div class="work-row">
+      <span class="work-num mono">02</span>
+      <div class="work-info"><h3>อัญมณีหรู</h3><p>ศึกษาการหักเหของแสงบนฟอร์มเหลี่ยม สำหรับพรีเซนต์แนวคิดเครื่องประดับ</p></div>
+      <div class="work-meta"><span>Product Study</span><span>2025</span></div>
+    </div>
+    <div class="work-row">
+      <span class="work-num mono">03</span>
+      <div class="work-info"><h3>ขวดน้ำหอม</h3><p>ทดลองพื้นผิวกระจกและแสงสะท้อนสำหรับพรีเซนต์บรรจุภัณฑ์</p></div>
+      <div class="work-meta"><span>Packaging</span><span>2025</span></div>
+    </div>
+    <div class="work-row">
+      <span class="work-num mono">04</span>
+      <div class="work-info"><h3>ยานสำรวจ</h3><p>ออกแบบฟอร์มยานขนาดเล็กสำหรับงานภาพประกอบแนวไซไฟ</p></div>
+      <div class="work-meta"><span>Sci-fi</span><span>2024</span></div>
+    </div>
+  </div>
+</section>
 
-    const renderer = new THREE.WebGLRenderer({
-      antialias: true,
-      alpha: false,
-      powerPreference: "high-performance"
-    });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.outputColorSpace = THREE.SRGBColorSpace;
-    mount.appendChild(renderer.domElement);
+<section class="process">
+  <div class="section-head" style="margin-bottom:0;">
+    <h2>เครื่องมือที่ใช้</h2>
+    <p>ซอฟต์แวร์และเทคนิคที่ใช้ประจำในงานผลิตภัณฑ์ 3 มิติ</p>
+  </div>
+  <ul class="process-list">
+    <li>Blender</li><li>Three.js</li><li>WebGL</li><li>Substance Painter</li><li>Cinema 4D</li><li>Figma</li>
+  </ul>
+</section>
 
-    // -----------------------------
-    // ASCII post effect
-    // -----------------------------
-    const ascii = new AsciiEffect(renderer, " .:-=+*#%@", {
-      invert: true,
-      resolution: 0.16
-    });
+<section class="contact" id="contact">
+  <div class="section-label mono">ติดต่องาน</div>
+  <h2>สนใจงานออกแบบผลิตภัณฑ์ 3 มิติ ทักมาคุยกันได้เลย</h2>
+  <a class="contact-link" href="mailto:hello@thunyakorn.studio">hello@thunyakorn.studio</a>
+  <div class="contact-socials">
+    <a href="#">Instagram</a>
+    <a href="#">Behance</a>
+    <a href="#">ArtStation</a>
+  </div>
+</section>
 
-    ascii.setSize(window.innerWidth, window.innerHeight);
-    ascii.domElement.style.color = "#8dff9f";
-    ascii.domElement.style.backgroundColor = "#030504";
-    ascii.domElement.style.fontFamily = '"Courier New", monospace';
-    ascii.domElement.style.fontWeight = "700";
-    ascii.domElement.style.fontSize = "10px";
-    ascii.domElement.style.lineHeight = "10px";
-    ascii.domElement.style.textAlign = "center";
-    ascii.domElement.style.whiteSpace = "pre";
-    mount.replaceChildren(ascii.domElement);
+<footer>
+  <span>© 2026 Thunyakorn Piamanboontee</span>
+  <span>Three.js · AsciiEffect</span>
+</footer>
 
-    // -----------------------------
-    // Lights
-    // -----------------------------
-    const key = new THREE.DirectionalLight(0xeaffee, 2.8);
-    key.position.set(3, 4, 4);
-    scene.add(key);
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { AsciiEffect } from 'three/addons/effects/AsciiEffect.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-    const rim = new THREE.DirectionalLight(0x88ff9a, 2.0);
-    rim.position.set(-4, 1, -3);
-    scene.add(rim);
+const GOLD = 0xE8B84B;
 
-    const fill = new THREE.AmbientLight(0x55775c, 1.0);
-    scene.add(fill);
+const holder = document.getElementById('ascii-holder');
+const loadingEl = document.getElementById('ascii-loading');
 
-    // -----------------------------
-    // Stylized portfolio sculpture
-    // -----------------------------
-    const heroGroup = new THREE.Group();
-    scene.add(heroGroup);
+let width = holder.clientWidth, height = holder.clientHeight;
 
-    const mat = new THREE.MeshStandardMaterial({
-      color: 0xd8ffe0,
-      roughness: 0.42,
-      metalness: 0.18
-    });
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(42, width/height, 0.1, 100);
+camera.position.set(0, 1, 8);
 
-    const darkMat = new THREE.MeshStandardMaterial({
-      color: 0x315b39,
-      roughness: 0.55,
-      metalness: 0.08
-    });
+const renderer = new THREE.WebGLRenderer({ alpha:true });
+renderer.setSize(width, height);
 
-    // Main floating torus-knot
-    const knot = new THREE.Mesh(
-      new THREE.TorusKnotGeometry(1.05, 0.28, 180, 32, 2, 3),
-      mat
-    );
-    heroGroup.add(knot);
+const ambient = new THREE.AmbientLight(0xffffff, 0.35);
+const key = new THREE.PointLight(0xffffff, 22, 40);
+key.position.set(5, 5, 6);
+const rim = new THREE.PointLight(0xffffff, 8, 40);
+rim.position.set(-6, -3, -4);
+scene.add(ambient, key, rim);
 
-    // Ring orbit
-    const ring = new THREE.Mesh(
-      new THREE.TorusGeometry(1.8, 0.022, 12, 180),
-      darkMat
-    );
-    ring.rotation.x = Math.PI * 0.42;
-    ring.rotation.y = Math.PI * 0.13;
-    heroGroup.add(ring);
+/* ---------- models ---------- */
+const mat = new THREE.MeshStandardMaterial({ color:0xffffff, metalness:0.25, roughness:0.35, flatShading:true });
 
-    // Small satellites
-    const satelliteGroup = new THREE.Group();
-    heroGroup.add(satelliteGroup);
+function buildGem(){
+  const g = new THREE.Group();
+  g.add(new THREE.Mesh(new THREE.IcosahedronGeometry(2.3, 1), mat));
+  return g;
+}
+function buildKnot(){
+  const g = new THREE.Group();
+  g.add(new THREE.Mesh(new THREE.TorusKnotGeometry(1.5, 0.45, 140, 12), mat));
+  return g;
+}
+function buildCapsule(){
+  const g = new THREE.Group();
+  const body = new THREE.Mesh(new THREE.CylinderGeometry(1.0,1.0,2.6,10), mat);
+  body.rotation.z = Math.PI/2;
+  const nose = new THREE.Mesh(new THREE.ConeGeometry(1.0,1.3,10), mat);
+  nose.position.x = 1.95; nose.rotation.z = -Math.PI/2;
+  const tail = new THREE.Mesh(new THREE.ConeGeometry(1.0,1.0,10), mat);
+  tail.position.x = -1.8; tail.rotation.z = Math.PI/2;
+  g.add(body, nose, tail);
+  return g;
+}
 
-    const satelliteGeo = new THREE.IcosahedronGeometry(0.08, 1);
-    for (let i = 0; i < 30; i++) {
-      const a = (i / 30) * Math.PI * 2;
-      const radius = 1.8 + Math.sin(i * 2.15) * 0.18;
-      const y = Math.cos(i * 1.6) * 0.8;
-      const s = new THREE.Mesh(satelliteGeo, i % 3 === 0 ? mat : darkMat);
-      s.position.set(
-        Math.cos(a) * radius,
-        y,
-        Math.sin(a) * radius
-      );
-      s.scale.setScalar(0.55 + (i % 4) * 0.18);
-      satelliteGroup.add(s);
-    }
+const models = { gem: buildGem, knot: buildKnot, capsule: buildCapsule };
+let current = new THREE.Group();
+scene.add(current);
 
-    // Floor grid
-    const grid = new THREE.GridHelper(14, 38, 0x294530, 0x102216);
-    grid.position.y = -2.15;
-    grid.rotation.y = 0.02;
-    scene.add(grid);
+function setModel(name){
+  scene.remove(current);
+  current = models[name]();
+  scene.add(current);
+}
+setModel('gem');
 
-    // Subtle vertical "data" columns
-    const dataGroup = new THREE.Group();
-    scene.add(dataGroup);
+/* ---------- ascii effect ---------- */
+let charSet = ' .:-+*=%@#';
+let effect = new AsciiEffect(renderer, charSet, { invert:false, resolution:0.14, color:false });
+effect.setSize(width, height);
+effect.domElement.style.color = '#E8B84B';
+effect.domElement.style.backgroundColor = 'transparent';
+effect.domElement.style.letterSpacing = '-1px';
+holder.appendChild(effect.domElement);
 
-    for (let i = 0; i < 24; i++) {
-      const h = 0.2 + ((i * 17) % 11) * 0.17;
-      const bar = new THREE.Mesh(
-        new THREE.BoxGeometry(0.018, h, 0.018),
-        darkMat
-      );
-      const x = (i - 11.5) * 0.42;
-      const z = -1.5 - (i % 3) * 0.25;
-      bar.position.set(x, -1.9 + h / 2, z);
-      dataGroup.add(bar);
-    }
+const controls = new OrbitControls(camera, effect.domElement);
+controls.enablePan = false;
+controls.enableZoom = false;
+controls.autoRotate = true;
+controls.autoRotateSpeed = 2.2;
+controls.enableDamping = true;
+controls.dampingFactor = 0.06;
 
-    // -----------------------------
-    // Controls
-    // -----------------------------
-    const controls = new OrbitControls(camera, ascii.domElement);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.055;
-    controls.enablePan = false;
-    controls.minDistance = 3.8;
-    controls.maxDistance = 7;
-    controls.autoRotate = false;
-    controls.rotateSpeed = 0.45;
+function rebuildEffect(){
+  const invert = document.getElementById('invert-toggle').classList.contains('on');
+  const color = document.getElementById('color-toggle').classList.contains('on');
+  const resSlider = document.getElementById('res-slider');
+  const resolution = Number(resSlider.value) / 100;
 
-    // Start with a gentle camera target.
-    controls.target.set(0, 0.05, 0);
+  holder.removeChild(effect.domElement);
+  effect = new AsciiEffect(renderer, charSet, { invert, resolution, color });
+  effect.setSize(width, height);
+  effect.domElement.style.backgroundColor = 'transparent';
+  effect.domElement.style.letterSpacing = '-1px';
+  effect.domElement.style.color = color ? '' : '#E8B84B';
+  holder.appendChild(effect.domElement);
+  controls.domElement = effect.domElement;
+}
 
-    // -----------------------------
-    // Pointer parallax
-    // -----------------------------
-    const pointer = { x: 0, y: 0 };
-    const smoothPointer = { x: 0, y: 0 };
+function resize(){
+  width = holder.clientWidth; height = holder.clientHeight;
+  camera.aspect = width/height;
+  camera.updateProjectionMatrix();
+  renderer.setSize(width, height);
+  effect.setSize(width, height);
+}
+window.addEventListener('resize', resize);
 
-    window.addEventListener("pointermove", (event) => {
-      pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
-      pointer.y = (event.clientY / window.innerHeight) * 2 - 1;
-    }, { passive: true });
+function animate(t){
+  controls.update();
+  effect.render(scene, camera);
+  requestAnimationFrame(animate);
+}
+requestAnimationFrame(animate);
 
-    // -----------------------------
-    // Animation
-    // -----------------------------
-    const clock = new THREE.Clock();
+setTimeout(()=>{ loadingEl.style.opacity = '0'; setTimeout(()=> loadingEl.remove(), 500); }, 350);
 
-    function animate() {
-      requestAnimationFrame(animate);
+/* ---------- panel wiring ---------- */
+document.getElementById('model-seg').addEventListener('click', (e)=>{
+  const btn = e.target.closest('button'); if(!btn) return;
+  document.querySelectorAll('#model-seg button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  setModel(btn.dataset.v);
+});
 
-      const t = clock.getElapsedTime();
+document.getElementById('chars-seg').addEventListener('click', (e)=>{
+  const btn = e.target.closest('button'); if(!btn) return;
+  document.querySelectorAll('#chars-seg button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  charSet = btn.dataset.v;
+  rebuildEffect();
+});
 
-      smoothPointer.x += (pointer.x - smoothPointer.x) * 0.035;
-      smoothPointer.y += (pointer.y - smoothPointer.y) * 0.035;
+document.getElementById('res-slider').addEventListener('input', rebuildEffect);
 
-      // Organic motion
-      knot.rotation.x = t * 0.18 + smoothPointer.y * 0.16;
-      knot.rotation.y = t * 0.24 + smoothPointer.x * 0.22;
-      knot.rotation.z = Math.sin(t * 0.37) * 0.08;
+['invert-toggle','color-toggle'].forEach(id=>{
+  document.getElementById(id).addEventListener('click', (e)=>{
+    e.target.classList.toggle('on');
+    rebuildEffect();
+  });
+});
 
-      ring.rotation.z = t * 0.12;
-      ring.rotation.y = Math.sin(t * 0.22) * 0.15;
+document.getElementById('rotate-toggle').addEventListener('click', (e)=>{
+  e.target.classList.toggle('on');
+  controls.autoRotate = e.target.classList.contains('on');
+});
+</script>
 
-      satelliteGroup.rotation.y = -t * 0.08;
-      satelliteGroup.rotation.x = Math.sin(t * 0.17) * 0.1;
-
-      heroGroup.position.x += ((smoothPointer.x * 0.18) - heroGroup.position.x) * 0.02;
-      heroGroup.position.y = Math.sin(t * 0.55) * 0.08 + (-smoothPointer.y * 0.11);
-      heroGroup.rotation.y += (smoothPointer.x * 0.05 - heroGroup.rotation.y) * 0.018;
-
-      dataGroup.position.z = Math.sin(t * 0.3) * 0.05;
-
-      controls.update();
-      ascii.render(scene, camera);
-    }
-
-    animate();
-
-    // -----------------------------
-    // Responsive
-    // -----------------------------
-    function resize() {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      ascii.setSize(window.innerWidth, window.innerHeight);
-
-      const mobile = window.innerWidth < 700;
-      ascii.domElement.style.fontSize = mobile ? "7px" : "10px";
-      ascii.domElement.style.lineHeight = mobile ? "7px" : "10px";
-    }
-
-    window.addEventListener("resize", resize);
-
-    // Prevent browser gestures on the 3D viewport from feeling awkward.
-    ascii.domElement.style.touchAction = "none";
-  </script>
 </body>
 </html>
