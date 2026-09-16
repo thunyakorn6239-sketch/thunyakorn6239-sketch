@@ -8,7 +8,7 @@
 
 <body>
 <a-scene
-  mindar-image="imageTargetSrc: https://aitutorialcourse.github.io/targets.mind;"
+  mindar-image="imageTargetSrc:thunyakorn6239.github.io/targets.mindthunyakorn6239-sketch"
   vr-mode-ui="enabled: false"
   device-orientation-permission-ui="enabled: false">
 
