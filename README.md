@@ -13,7 +13,7 @@
   device-orientation-permission-ui="enabled: false">
 
   <a-assets>
-    <a-asset-item id="model0" src="thunyakorn6239.github.io/targets.mind"></a-asset-item>
+    <a-asset-item id="model0" src="https://thunyakorn6239.github.io/targets.mind"></a-asset-item>
 
   </a-assets>
 
