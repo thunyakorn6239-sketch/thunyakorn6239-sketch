@@ -8,7 +8,7 @@
 
 <body>
 <a-scene
-  mindar-image="imageTargetSrc:https://thunyakorn6239.github.io/targets.mindthunyakorn6239-sketch"
+  mindar-image="imageTargetSrc:"https://thunyakorn6239.github.io/targets.mind"
   vr-mode-ui="enabled: false"
   device-orientation-permission-ui="enabled: false">
 
@@ -19,7 +19,7 @@
 
   <!-- Target 1 -->
   <a-entity mindar-image-target="targetIndex: 0">
-    <a-gltf-model src="#model0" animation-mixer rotation="0 0 0" scale="1 1 1"></a-gltf-model>
+    <a-gltf-model src="#model0" animation-mixer rotation="90 0 0" scale="2 2 2"></a-gltf-model>
   </a-entity>
 
   <!-- Target 2 -->
